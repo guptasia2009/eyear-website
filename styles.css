@@ -323,6 +323,50 @@ a:hover {
   border-bottom: 1px solid var(--line);
 }
 
+/* Scan line — fixed so it sweeps the full viewport top to bottom */
+.hero__scan {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.5) 15%,
+    #60a5fa 50%,
+    rgba(37, 99, 235, 0.5) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.9), 0 0 28px rgba(37, 99, 235, 0.4);
+  pointer-events: none;
+  z-index: 200;
+  animation: heroScan 2s cubic-bezier(0.4, 0, 0.55, 1) 0.2s forwards;
+}
+
+@keyframes heroScan {
+  0%   { transform: translateY(0);     opacity: 0; }
+  3%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Clip-path reveal — hero content is hidden below the scan line, revealed above it */
+.hero {
+  clip-path: inset(0 0 100% 0);
+  animation: heroClipReveal 2s cubic-bezier(0.4, 0, 0.55, 1) 0.32s both;
+}
+
+@keyframes heroClipReveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__scan { display: none; }
+  .hero { clip-path: none; animation: none; }
+}
+
 .hero__layout {
   display: grid;
   gap: 2.5rem;
@@ -594,6 +638,17 @@ a:hover {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+/* Hero device image — crop whitespace, cap height so callout stays in view */
+.hero__aside .device-img {
+  max-height: 400px;
+}
+
+.hero__aside .device-img img {
+  height: 400px;
+  object-fit: cover;
+  object-position: center 50%;
 }
 
 /* Placeholders */
